@@ -14,10 +14,15 @@ void main() {
     final preferences = await SharedPreferences.getInstance();
     final themeRepository = PersistedThemeRepository(preferences);
 
-    runApp(MultiRepositoryProvider(providers: [
-      RepositoryProvider<ThemeRepository>(
-        create: (context) => themeRepository,
+    runApp(
+      MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider<ThemeRepository>(
+            create: (context) => themeRepository,
+          ),
+        ],
+        child: const App(),
       ),
-    ], child: const App()));
+    );
   });
 }

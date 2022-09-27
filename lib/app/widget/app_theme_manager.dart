@@ -20,7 +20,6 @@ class _AppThemeManagerState extends State<AppThemeManager>
     with WidgetsBindingObserver {
   late final ThemeRepository _themeRepository;
 
-  late bool _isDarkModeFromDevice;
   late AppThemeMode _themeMode;
 
   @override
@@ -30,7 +29,7 @@ class _AppThemeManagerState extends State<AppThemeManager>
     WidgetsBinding.instance.handlePlatformBrightnessChanged();
 
     _themeRepository = context.read();
-    _setUpAppTheme();
+    _setUpAppThemeOnInit();
 
     WidgetsBinding.instance.window.onPlatformBrightnessChanged = () {
       _onBrightnessChanged();
@@ -72,49 +71,51 @@ class _AppThemeManagerState extends State<AppThemeManager>
     );
   }
 
-  void _onThemeSwitch(AppThemeMode mode) {
-    setState(() {
-      _themeMode = mode;
-      SystemChrome.setSystemUIOverlayStyle(_getOverlayStyle());
-    });
-  }
-
   SystemUiOverlayStyle _getOverlayStyle() {
-    switch (_themeMode.colorMode.style) {
+    switch (_themeMode.overlayStyle) {
       case OverlayStyle.dark:
         return SystemUiOverlayStyle.dark;
       case OverlayStyle.light:
         return SystemUiOverlayStyle.light;
-      default:
-        return _isDarkModeFromDevice
-            ? SystemUiOverlayStyle.light
-            : SystemUiOverlayStyle.dark;
     }
   }
 
-  void _setUpAppTheme() {
-    final window = WidgetsBinding.instance.window;
-    _isDarkModeFromDevice = window.platformBrightness == Brightness.dark;
-
+  AppThemeMode _getLatestAppThemeMode() {
     final colorMode = _themeRepository.getColorThemeMode();
     final typographyMode = _themeRepository.getTypographyThemeMode();
+    final window = WidgetsBinding.instance.window;
+    final overlayStyle = colorMode.getOverlayStyleByColorMode(
+      window.platformBrightness,
+    );
+
     final appThemeMode = AppThemeMode(
       colorMode: colorMode,
       typographyMode: typographyMode,
+      overlayStyle: overlayStyle,
     );
-    _themeMode = appThemeMode;
 
-    // Set status bar on init
+    return appThemeMode;
+  }
+
+  void _setUpAppThemeOnInit() {
+    _themeMode = _getLatestAppThemeMode();
     SystemChrome.setSystemUIOverlayStyle(_getOverlayStyle());
   }
 
-  void _onBrightnessChanged() {
+  void _onThemeSwitch(AppThemeMode mode) {
     setState(() {
-      final window = WidgetsBinding.instance.window;
-      _isDarkModeFromDevice = window.platformBrightness == Brightness.dark;
-      if (_themeMode.colorMode == AppColorThemeMode.system) {
-        SystemChrome.setSystemUIOverlayStyle(_getOverlayStyle());
-      }
+      _themeMode = mode;
     });
+    SystemChrome.setSystemUIOverlayStyle(_getOverlayStyle());
+  }
+
+  // Whenever device theme mode is changed this function is called.
+  // Look whether app theme is 'system' or not.
+  // Skip theme change handling if app theme is not 'system'.
+  // Update theme colors and status bar based on device theme mode
+  // if app theme is 'system'.
+  void _onBrightnessChanged() {
+    if (_themeMode.colorMode != AppColorThemeMode.system) return;
+    _onThemeSwitch(_getLatestAppThemeMode());
   }
 }

@@ -24,6 +24,9 @@ class AppThemeSwitcher extends InheritedWidget {
     final appThemeMode = AppThemeMode(
       colorMode: colorMode,
       typographyMode: typographyMode,
+      overlayStyle: colorMode.getOverlayStyleByColorMode(
+        WidgetsBinding.instance.window.platformBrightness,
+      ),
     );
 
     result.themeRepository.setColorThemeMode(colorMode);
@@ -44,6 +47,9 @@ class AppThemeSwitcher extends InheritedWidget {
     final appThemeMode = AppThemeMode(
       colorMode: colorMode,
       typographyMode: typographyMode,
+      overlayStyle: colorMode.getOverlayStyleByColorMode(
+        WidgetsBinding.instance.window.platformBrightness,
+      ),
     );
 
     result.themeRepository.setTypographyThemeMode(typographyMode);

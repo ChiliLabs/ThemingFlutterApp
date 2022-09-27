@@ -39,6 +39,7 @@ class AppTheme extends InheritedWidget {
 
     final colorMode = result.appThemeMode.colorMode;
     final typographyMode = result.appThemeMode.typographyMode;
+    final overlayStyle = result.appThemeMode.overlayStyle;
 
     switch (colorMode) {
       case AppColorThemeMode.light:
@@ -66,11 +67,7 @@ class AppTheme extends InheritedWidget {
           return result.draculaRobotoAppThemeData;
         }
       case AppColorThemeMode.system:
-        final windowBrightness =
-            WidgetsBinding.instance.window.platformBrightness;
-        final isSystemDarkMode = windowBrightness == Brightness.dark;
-
-        print(isSystemDarkMode);
+        final isSystemDarkMode = overlayStyle == OverlayStyle.light;
 
         if (typographyMode == AppTypographyThemeMode.poppins) {
           return isSystemDarkMode

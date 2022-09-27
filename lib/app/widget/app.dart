@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:theming_flutter/app/route/app_routes.dart';
 import 'package:theming_flutter/app/widget/app_theme_manager.dart';
 import 'package:theming_flutter/main/widget/main_page.dart';
-import 'package:theming_flutter/settings/widget/settings_page.dart';
-import 'package:theming_flutter/theme/app_theme_data.dart';
 import 'package:theming_flutter/theme/widget/app_theme.dart';
 
 class App extends StatefulWidget {
