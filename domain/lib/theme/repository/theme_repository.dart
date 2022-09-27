@@ -1,9 +1,15 @@
 import 'package:domain/theme/model/app_theme_mode.dart';
 
 abstract class ThemeRepository {
-  bool getIsThemeSetUp();
+  bool getIsColorThemeSetUp();
 
-  AppThemeMode getMode();
+  bool getIsTypographyThemeSetUp();
 
-  Future<void> setThemeMode(AppThemeMode mode);
+  AppColorThemeMode getColorThemeMode();
+
+  AppTypographyThemeMode getTypographyThemeMode();
+
+  Future<void> setColorThemeMode(AppColorThemeMode mode);
+
+  Future<void> setTypographyThemeMode(AppTypographyThemeMode mode);
 }

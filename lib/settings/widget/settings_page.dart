@@ -2,6 +2,7 @@ import 'package:domain/theme/model/app_theme_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:theming_flutter/design_elements/th_app_bar.dart';
 import 'package:theming_flutter/design_elements/th_primary_button.dart';
+import 'package:theming_flutter/design_elements/th_icon_button.dart';
 import 'package:theming_flutter/theme/widget/app_theme.dart';
 import 'package:theming_flutter/theme/widget/app_theme_switcher.dart';
 
@@ -17,58 +18,141 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     final appTheme = AppTheme.of(context);
     final color = appTheme.color;
-    final deviceSize = MediaQuery.of(context).size;
+    final typography = appTheme.typography;
 
     return Scaffold(
       backgroundColor: color.background.background,
       appBar: THAppBar.build(
         context,
         title: 'Change theme',
+        enableBackButton: true,
       ),
-      body: Center(
-        child: Container(
-          height: deviceSize.height * 0.5,
-          width: deviceSize.width * 0.8,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              color: color.background.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: color.background.surface.withOpacity(0.4),
-                  offset: const Offset(0, 4),
-                  blurRadius: 12,
-                )
-              ]),
-          child: Padding(
-            padding: const EdgeInsets.all(40),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                THPrimaryButton(
-                  onTap: () =>
-                      AppThemeSwitcher.setMode(context, AppThemeMode.system),
-                  icon: Icons.settings,
-                  text: 'System',
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: color.background.surface,
+                boxShadow: [
+                  BoxShadow(
+                    color: color.background.surface.withOpacity(0.4),
+                    offset: const Offset(0, 4),
+                    blurRadius: 12,
+                  )
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Color',
+                      style: typography.subtitle.copyWith(
+                        color: color.text.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        THIconButton(
+                          onTap: () => AppThemeSwitcher.setColorMode(
+                            context,
+                            AppColorThemeMode.system,
+                          ),
+                          icon: Icons.settings,
+                        ),
+                        const SizedBox(width: 12),
+                        THIconButton(
+                          onTap: () => AppThemeSwitcher.setColorMode(
+                            context,
+                            AppColorThemeMode.light,
+                          ),
+                          icon: Icons.light_mode,
+                        ),
+                        const SizedBox(width: 12),
+                        THIconButton(
+                          onTap: () => AppThemeSwitcher.setColorMode(
+                            context,
+                            AppColorThemeMode.dark,
+                          ),
+                          icon: Icons.dark_mode,
+                        ),
+                        const SizedBox(width: 12),
+                        THIconButton(
+                          onTap: () => AppThemeSwitcher.setColorMode(
+                            context,
+                            AppColorThemeMode.ocean,
+                          ),
+                          icon: Icons.water_drop_outlined,
+                        ),
+                        const SizedBox(width: 12),
+                        THIconButton(
+                          onTap: () => AppThemeSwitcher.setColorMode(
+                            context,
+                            AppColorThemeMode.dracula,
+                          ),
+                          icon: Icons.whatshot_sharp,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 20),
-                THPrimaryButton(
-                  onTap: () =>
-                      AppThemeSwitcher.setMode(context, AppThemeMode.light),
-                  icon: Icons.light_mode,
-                  text: 'Light',
-                ),
-                const SizedBox(height: 20),
-                THPrimaryButton(
-                  onTap: () =>
-                      AppThemeSwitcher.setMode(context, AppThemeMode.dark),
-                  icon: Icons.dark_mode,
-                  text: 'Dark',
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: color.background.surface,
+                boxShadow: [
+                  BoxShadow(
+                    color: color.background.surface.withOpacity(0.4),
+                    offset: const Offset(0, 4),
+                    blurRadius: 12,
+                  )
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Text style',
+                      style: typography.subtitle.copyWith(
+                        color: color.text.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    THPrimaryButton(
+                      onTap: () => AppThemeSwitcher.setTypographyMode(
+                        context,
+                        AppTypographyThemeMode.poppins,
+                      ),
+                      text: 'Poppins',
+                    ),
+                    const SizedBox(height: 16),
+                    THPrimaryButton(
+                      onTap: () => AppThemeSwitcher.setTypographyMode(
+                        context,
+                        AppTypographyThemeMode.roboto,
+                      ),
+                      text: 'Roboto',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

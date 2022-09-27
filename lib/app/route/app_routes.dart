@@ -1,4 +1,4 @@
 class AppRoutes {
   static const root = '/';
-  static const settings = '/settings';
+  static const main = '/main';
 }
