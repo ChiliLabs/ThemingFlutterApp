@@ -26,67 +26,95 @@ class _AppThemeManagerState extends State<AppThemeManager>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addObserver(this);
-    WidgetsBinding.instance?.handlePlatformBrightnessChanged();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.handlePlatformBrightnessChanged();
 
     _themeRepository = context.read();
     _setUpAppTheme();
+
+    WidgetsBinding.instance.window.onPlatformBrightnessChanged = () {
+      _onBrightnessChanged();
+    };
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final lightAppThemeData = AppThemeData.light();
-    final darkAppThemeData = AppThemeData.dark();
+    final lightPoppinsAppThemeData = AppThemeData.lightPoppins();
+    final lightRobotoAppThemeData = AppThemeData.lightRoboto();
+    final darkPoppinsAppThemeData = AppThemeData.darkPoppins();
+    final darkRobotoAppThemeData = AppThemeData.darkRoboto();
+    final oceanPoppinsAppThemeData = AppThemeData.oceanPoppins();
+    final oceanRobotoAppThemeData = AppThemeData.oceanRoboto();
+    final draculaPoppinsAppThemeData = AppThemeData.draculaPoppins();
+    final draculaRobotoAppThemeData = AppThemeData.draculaRoboto();
 
     return AppThemeSwitcher(
-        themeRepository: _themeRepository,
-        onThemeSwitch: (AppThemeMode mode) {
-          setState(() {
-            _themeMode = mode;
-            SystemChrome.setSystemUIOverlayStyle(_isDarkMode()
-                ? SystemUiOverlayStyle.light
-                : SystemUiOverlayStyle.dark);
-          });
-        },
-        child: AppTheme(
-          lightAppThemeData: lightAppThemeData,
-          darkAppThemeData: darkAppThemeData,
-          isDarkMode: _isDarkMode(),
-          child: widget.child,
-        ));
+      themeRepository: _themeRepository,
+      onThemeSwitch: _onThemeSwitch,
+      child: AppTheme(
+        lightPoppinsAppThemeData: lightPoppinsAppThemeData,
+        lightRobotoAppThemeData: lightRobotoAppThemeData,
+        darkPoppinsAppThemeData: darkPoppinsAppThemeData,
+        darkRobotoAppThemeData: darkRobotoAppThemeData,
+        oceanPoppinsAppThemeData: oceanPoppinsAppThemeData,
+        oceanRobotoAppThemeData: oceanRobotoAppThemeData,
+        draculaPoppinsAppThemeData: draculaPoppinsAppThemeData,
+        draculaRobotoAppThemeData: draculaRobotoAppThemeData,
+        appThemeMode: _themeMode,
+        child: widget.child,
+      ),
+    );
   }
 
-  bool _isDarkMode() =>
-      _themeMode == AppThemeMode.dark ||
-      (_themeMode == AppThemeMode.system && _isDarkModeFromDevice);
+  void _onThemeSwitch(AppThemeMode mode) {
+    setState(() {
+      _themeMode = mode;
+      SystemChrome.setSystemUIOverlayStyle(_getOverlayStyle());
+    });
+  }
+
+  SystemUiOverlayStyle _getOverlayStyle() {
+    switch (_themeMode.colorMode.style) {
+      case OverlayStyle.dark:
+        return SystemUiOverlayStyle.dark;
+      case OverlayStyle.light:
+        return SystemUiOverlayStyle.light;
+      default:
+        return _isDarkModeFromDevice
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark;
+    }
+  }
 
   void _setUpAppTheme() {
-    final window = WidgetsBinding.instance?.window;
-    _isDarkModeFromDevice = window?.platformBrightness == Brightness.dark;
+    final window = WidgetsBinding.instance.window;
+    _isDarkModeFromDevice = window.platformBrightness == Brightness.dark;
 
-    final themeMode = _themeRepository.getMode();
-    _themeMode = themeMode;
+    final colorMode = _themeRepository.getColorThemeMode();
+    final typographyMode = _themeRepository.getTypographyThemeMode();
+    final appThemeMode = AppThemeMode(
+      colorMode: colorMode,
+      typographyMode: typographyMode,
+    );
+    _themeMode = appThemeMode;
 
     // Set status bar on init
-    SystemChrome.setSystemUIOverlayStyle(
-        _isDarkMode() ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
+    SystemChrome.setSystemUIOverlayStyle(_getOverlayStyle());
+  }
 
-    // Callback is called every time the brightness changes
-    window?.onPlatformBrightnessChanged = () {
-      setState(() {
-        _isDarkModeFromDevice = window.platformBrightness == Brightness.dark;
-        if (_themeMode == AppThemeMode.system) {
-          SystemChrome.setSystemUIOverlayStyle(_isDarkModeFromDevice
-              ? SystemUiOverlayStyle.light
-              : SystemUiOverlayStyle.dark);
-        }
-      });
-    };
+  void _onBrightnessChanged() {
+    setState(() {
+      final window = WidgetsBinding.instance.window;
+      _isDarkModeFromDevice = window.platformBrightness == Brightness.dark;
+      if (_themeMode.colorMode == AppColorThemeMode.system) {
+        SystemChrome.setSystemUIOverlayStyle(_getOverlayStyle());
+      }
+    });
   }
 }

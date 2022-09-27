@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:theming_flutter/theme/widget/app_theme.dart';
 
-class THPrimaryButton extends StatefulWidget {
+class THIconButton extends StatefulWidget {
   final VoidCallback onTap;
-  final String text;
+  final IconData icon;
 
-  const THPrimaryButton({
+  const THIconButton({
     Key? key,
     required this.onTap,
-    required this.text,
+    required this.icon,
   }) : super(key: key);
 
   @override
-  _THPrimaryButtonState createState() => _THPrimaryButtonState();
+  State<THIconButton> createState() => _THIconButtonState();
 }
 
-class _THPrimaryButtonState extends State<THPrimaryButton>
+class _THIconButtonState extends State<THIconButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   var _scale;
@@ -44,9 +44,9 @@ class _THPrimaryButtonState extends State<THPrimaryButton>
   Widget build(BuildContext context) {
     final appTheme = AppTheme.of(context);
     final color = appTheme.color;
-    final typography = appTheme.typography;
 
     _scale = 1 - _controller.value;
+
     return Listener(
       onPointerDown: (PointerDownEvent event) {
         _controller.forward();
@@ -58,9 +58,10 @@ class _THPrimaryButtonState extends State<THPrimaryButton>
       child: Transform.scale(
         scale: _scale,
         child: Container(
-          height: 60,
+          height: 50,
+          width: 50,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
             color: color.primary.primary,
             boxShadow: [
               BoxShadow(
@@ -70,23 +71,9 @@ class _THPrimaryButtonState extends State<THPrimaryButton>
               )
             ],
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                  widget.text,
-                  textAlign: TextAlign.center,
-                  style: typography.paragraphRegular.copyWith(
-                    color: color.text.textSecondary,
-                  ),
-                ),
-              ),
-              const Spacer(),
-            ],
+          child: Icon(
+            widget.icon,
+            color: color.text.textSecondary,
           ),
         ),
       ),

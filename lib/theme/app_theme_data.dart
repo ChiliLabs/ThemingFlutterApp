@@ -11,14 +11,44 @@ class AppThemeData extends Equatable {
     required this.typography,
   });
 
-  factory AppThemeData.light() => AppThemeData(
+  factory AppThemeData.lightPoppins() => AppThemeData(
         color: AppColor.light(),
-        typography: AppTypography.defaultTypography,
+        typography: AppTypography.poppins(),
       );
 
-  factory AppThemeData.dark() => AppThemeData(
+  factory AppThemeData.lightRoboto() => AppThemeData(
+        color: AppColor.light(),
+        typography: AppTypography.roboto(),
+      );
+
+  factory AppThemeData.darkPoppins() => AppThemeData(
         color: AppColor.dark(),
-        typography: AppTypography.defaultTypography,
+        typography: AppTypography.poppins(),
+      );
+
+  factory AppThemeData.darkRoboto() => AppThemeData(
+        color: AppColor.dark(),
+        typography: AppTypography.roboto(),
+      );
+
+  factory AppThemeData.oceanPoppins() => AppThemeData(
+        color: AppColor.ocean(),
+        typography: AppTypography.poppins(),
+      );
+
+  factory AppThemeData.oceanRoboto() => AppThemeData(
+        color: AppColor.ocean(),
+        typography: AppTypography.roboto(),
+      );
+
+  factory AppThemeData.draculaPoppins() => AppThemeData(
+        color: AppColor.dracula(),
+        typography: AppTypography.poppins(),
+      );
+
+  factory AppThemeData.draculaRoboto() => AppThemeData(
+        color: AppColor.dracula(),
+        typography: AppTypography.roboto(),
       );
 
   @override

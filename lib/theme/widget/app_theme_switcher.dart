@@ -13,15 +13,41 @@ class AppThemeSwitcher extends InheritedWidget {
     required Widget child,
   }) : super(key: key, child: child);
 
-  static void setMode(BuildContext context, AppThemeMode mode) {
+  static void setColorMode(BuildContext context, AppColorThemeMode colorMode) {
     final result =
         context.dependOnInheritedWidgetOfExactType<AppThemeSwitcher>();
     if (result == null) {
       throw 'No AppThemeMode found in context';
     }
 
-    result.themeRepository.setThemeMode(mode);
-    result.onThemeSwitch(mode);
+    final typographyMode = result.themeRepository.getTypographyThemeMode();
+    final appThemeMode = AppThemeMode(
+      colorMode: colorMode,
+      typographyMode: typographyMode,
+    );
+
+    result.themeRepository.setColorThemeMode(colorMode);
+    result.onThemeSwitch(appThemeMode);
+  }
+
+  static void setTypographyMode(
+    BuildContext context,
+    AppTypographyThemeMode typographyMode,
+  ) {
+    final result =
+        context.dependOnInheritedWidgetOfExactType<AppThemeSwitcher>();
+    if (result == null) {
+      throw 'No AppThemeMode found in context';
+    }
+
+    final colorMode = result.themeRepository.getColorThemeMode();
+    final appThemeMode = AppThemeMode(
+      colorMode: colorMode,
+      typographyMode: typographyMode,
+    );
+
+    result.themeRepository.setTypographyThemeMode(typographyMode);
+    result.onThemeSwitch(appThemeMode);
   }
 
   @override

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:theming_flutter/app/route/app_routes.dart';
 import 'package:theming_flutter/app/widget/app_theme_manager.dart';
+import 'package:theming_flutter/main/widget/main_page.dart';
 import 'package:theming_flutter/settings/widget/settings_page.dart';
+import 'package:theming_flutter/theme/app_theme_data.dart';
 import 'package:theming_flutter/theme/widget/app_theme.dart';
 
 class App extends StatefulWidget {
@@ -24,7 +26,7 @@ class _AppState extends State<App> {
     while (_navKey.currentState == null) {
       await Future.delayed(const Duration(milliseconds: 25));
     }
-    await _navKey.currentState?.pushReplacementNamed(AppRoutes.settings);
+    await _navKey.currentState?.pushReplacementNamed(AppRoutes.main);
   }
 
   @override
@@ -33,10 +35,19 @@ class _AppState extends State<App> {
       child: MaterialApp(
         navigatorKey: _navKey,
         builder: (context, widget) => widget!,
+        theme: ThemeData(
+          brightness: Brightness.light,
+          primarySwatch: Colors.grey,
+        ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          primarySwatch: Colors.grey,
+        ),
         routes: <String, WidgetBuilder>{
           AppRoutes.root: (context) => Container(
-              color: AppTheme.of(context).color.background.background),
-          AppRoutes.settings: (context) => const SettingsPage(),
+                color: AppTheme.of(context).color.background.background,
+              ),
+          AppRoutes.main: (context) => const MainPage(),
         },
       ),
     );
